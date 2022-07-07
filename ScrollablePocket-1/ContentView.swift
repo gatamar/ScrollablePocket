@@ -8,102 +8,6 @@
 import SwiftUI
 import Combine
 
-protocol SizePrefferrable {
-    func preferredSize(oneHeight: CGFloat) -> Int
-    var text: String { get }
-}
-
-struct SmallViewDragInfo<SmallContentView: View> {
-    enum DragType {
-        case change, end
-    }
-    
-    let type: DragType
-    let touchLocationInPocket: CGPoint
-    let viewLocationInPocket: CGPoint
-    let text: String
-}
-
-class ScrollablePocketViewModel<SmallContentView: View & Hashable & SizePrefferrable>: ObservableObject {
-    @Published var smallViews: [SmallContentView]
-    @Published var drag: SmallViewDragInfo<SmallContentView>?
-    
-    init(smallViews: [SmallContentView]) {
-        self.smallViews = smallViews
-        print("TADAM: re-render viewmodel")
-    }
-}
-
-struct ScrollablePocket<SmallContentView: View & Hashable & SizePrefferrable, PlaceholderView: View>: View {
-    @ObservedObject var viewModel: ScrollablePocketViewModel<SmallContentView>
-    @State private var scrollOffset: CGPoint = .zero
-    private var oneHeight: CGFloat
-    private var placeholderBuilder: (SmallContentView) -> PlaceholderView
-    init(viewModel: ScrollablePocketViewModel<SmallContentView>,
-         oneHeight: CGFloat,
-         placeholderBuilder: @escaping (SmallContentView) -> PlaceholderView) {
-        self.viewModel = viewModel
-        self.oneHeight = oneHeight
-        self.placeholderBuilder = placeholderBuilder
-    }
-    
-    var body: some View {
-        GeometryReader { geometry in
-            ScrollView(.vertical,  showsIndicators: true) {
-                VStack(spacing: 0) {
-                    ForEach(viewModel.smallViews, id: \.self) { smallView in
-                        ZStack {
-                            smallView
-                                .frame(height: oneHeight*CGFloat(smallView.preferredSize(oneHeight: oneHeight)))
-                                .background(.green)
-                                .onTapGesture {  }
-                                .gesture( smallViewDragGesture(view: smallView) )
-    
-                            placeholderForView(smallView)
-                                .frame(height: oneHeight*CGFloat(smallView.preferredSize(oneHeight: oneHeight)))
-                                .background(.green)
-                        }
-                    }
-                }
-            }
-            .coordinateSpace(name: "hstack-shmack")
-            .readingScrollView(from: "pocket-scroll", into: $scrollOffset)
-            .background(Color.yellow)
-        }
-    }
-    
-    @ViewBuilder
-    private func placeholderForView(_ view: SmallContentView) -> some View {
-        if viewModel.drag?.text == view.text && viewModel.drag?.type == .change {
-            placeholderBuilder(view)
-        } else {
-            EmptyView()
-        }
-    }
-    
-    private func smallViewDragGesture(view: SmallContentView) -> some Gesture {
-        DragGesture(minimumDistance: 0, coordinateSpace: .named("hstack-shmack"))
-            .onChanged({
-                let locationInPocket = CGPoint(x: $0.location.x - scrollOffset.x, y: $0.location.y - scrollOffset.y)
-                print("TADAM: locationInPocket = \(locationInPocket)")
-                viewModel.drag =
-                    SmallViewDragInfo(
-                        type: .change,
-                        touchLocationInPocket: locationInPocket,
-                        viewLocationInPocket: .zero,
-                        text: view.text)
-            })
-            .onEnded { _ in
-                viewModel.drag = nil
-//                    SmallViewDragInfo(
-//                        type: .end,
-//                        touchLocationInPocket: .zero,
-//                        viewLocationInPocket: .zero,
-//                        view: view)
-            }
-    }
-}
-
 struct ContentView: View {
     @ObservedObject private var viewModel = ScrollablePocketViewModel<MySmallView>(smallViews: smallViewsSample())
     
@@ -143,7 +47,9 @@ private func smallViewsSample() -> [MySmallView] {
     return (0..<100).map { MySmallView(str: String($0)) }
 }
 
-private struct MySmallView: View, Hashable, SizePrefferrable {
+private struct MySmallView: View, Identifiable, Hashable, SizePrefferrable {
+    var id = UUID()
+    
     @State var str: String
     
     var body: some View {

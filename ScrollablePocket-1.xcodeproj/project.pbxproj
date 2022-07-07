@@ -12,6 +12,7 @@
 		4F259E4128771D2A0041742E /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 4F259E4028771D2A0041742E /* Assets.xcassets */; };
 		4F259E4428771D2A0041742E /* Preview Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 4F259E4328771D2A0041742E /* Preview Assets.xcassets */; };
 		4F259E4B287725F10041742E /* ScrollViewOffsetModifier.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4F259E4A287725F10041742E /* ScrollViewOffsetModifier.swift */; };
+		4F259E4D2877993D0041742E /* ScrollablePocket.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4F259E4C2877993D0041742E /* ScrollablePocket.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -21,6 +22,7 @@
 		4F259E4028771D2A0041742E /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		4F259E4328771D2A0041742E /* Preview Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = "Preview Assets.xcassets"; sourceTree = "<group>"; };
 		4F259E4A287725F10041742E /* ScrollViewOffsetModifier.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ScrollViewOffsetModifier.swift; sourceTree = "<group>"; };
+		4F259E4C2877993D0041742E /* ScrollablePocket.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ScrollablePocket.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -58,6 +60,7 @@
 				4F259E4028771D2A0041742E /* Assets.xcassets */,
 				4F259E4228771D2A0041742E /* Preview Content */,
 				4F259E4A287725F10041742E /* ScrollViewOffsetModifier.swift */,
+				4F259E4C2877993D0041742E /* ScrollablePocket.swift */,
 			);
 			path = "ScrollablePocket-1";
 			sourceTree = "<group>";
@@ -142,6 +145,7 @@
 			files = (
 				4F259E4B287725F10041742E /* ScrollViewOffsetModifier.swift in Sources */,
 				4F259E3F28771D280041742E /* ContentView.swift in Sources */,
+				4F259E4D2877993D0041742E /* ScrollablePocket.swift in Sources */,
 				4F259E3D28771D280041742E /* ScrollablePocket_1App.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
