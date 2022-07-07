@@ -50,17 +50,19 @@ struct ScrollablePocket<SmallContentView: View & Hashable & SizePrefferrable, Pl
     var body: some View {
         GeometryReader { geometry in
             ScrollView(.vertical,  showsIndicators: true) {
-                ForEach(viewModel.smallViews, id: \.self) { smallView in
-                    ZStack {
-                        smallView
-                            .frame(height: oneHeight*CGFloat(smallView.preferredSize(oneHeight: oneHeight)))
-                            .background(.green)
-                            .onTapGesture {  }
-                            .gesture( smallViewDragGesture(view: smallView) )
-                        
-                        placeholderForView(smallView)
-                            .frame(height: oneHeight*CGFloat(smallView.preferredSize(oneHeight: oneHeight)))
-                            .background(.green)
+                VStack(spacing: 0) {
+                    ForEach(viewModel.smallViews, id: \.self) { smallView in
+                        ZStack {
+                            smallView
+                                .frame(height: oneHeight*CGFloat(smallView.preferredSize(oneHeight: oneHeight)))
+                                .background(.green)
+                                .onTapGesture {  }
+                                .gesture( smallViewDragGesture(view: smallView) )
+    
+                            placeholderForView(smallView)
+                                .frame(height: oneHeight*CGFloat(smallView.preferredSize(oneHeight: oneHeight)))
+                                .background(.green)
+                        }
                     }
                 }
             }
