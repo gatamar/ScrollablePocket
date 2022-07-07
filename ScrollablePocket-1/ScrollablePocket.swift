@@ -41,18 +41,23 @@ struct ScrollablePocket<SmallContentView: View & Identifiable & Hashable & SizeP
                             ForEach(0..<smallViewsLayout[smallViewsIdx1].count, id: \.self) { smallViewsIdx2 in
                                 let smallView = smallViewsLayout[smallViewsIdx1][smallViewsIdx2]
                                 let frame = smallViewsFrames[smallViewsIdx1][smallViewsIdx2]
-                                ZStack {
-                                    smallView
-                                        .frame(height: frame.height)
-                                        .background(.green)
-                                        .cornerRadius(10)
-                                        .onTapGesture {  }
-                                        .gesture( smallViewDragGesture(view: smallView) )
-            
-                                    placeholderForView(smallView)
-                                        .frame(height: frame.height)
-                                        .background(.green)
-                                }
+                                //GeometryReader { geometry2 in
+                                    ZStack {
+                                        smallView
+                                            //.offset(y: frame.minY)
+                                            .frame(height: frame.height)
+                                            .background(.green)
+                                            .cornerRadius(10)
+                                            .onTapGesture {  }
+                                            .gesture( smallViewDragGesture(view: smallView, someFrame: frame) )
+                
+                                        placeholderForView(smallView)
+                                            //.offset(y: frame.minY)
+                                            .frame(height: frame.height)
+                                            .background(.green)
+                                    }
+                                //}
+                                
                             }
                         }
                     }
@@ -60,10 +65,11 @@ struct ScrollablePocket<SmallContentView: View & Identifiable & Hashable & SizeP
                         updateSmallViewsLayout(views)
                     })
                 }
+                .coordinateSpace(name: "hstack-shmack")
+                .readingScrollView(from: "pocket-scroll", into: $scrollOffset)
+                .background(Color.yellow)
             }
-            .coordinateSpace(name: "hstack-shmack")
-            .readingScrollView(from: "pocket-scroll", into: $scrollOffset)
-            .background(Color.yellow)
+            .coordinateSpace(name: "pocket-scroll")
         }
     }
     
@@ -93,16 +99,18 @@ struct ScrollablePocket<SmallContentView: View & Identifiable & Hashable & SizeP
         }
     }
     
-    private func smallViewDragGesture(view: SmallContentView) -> some Gesture {
-        DragGesture(minimumDistance: 0, coordinateSpace: .named("hstack-shmack"))
+    // "someFrame" is absolute; to make it relative, substract scroll offset!
+    private func smallViewDragGesture(view: SmallContentView, someFrame: CGRect) -> some Gesture {
+        return DragGesture(minimumDistance: 0, coordinateSpace: .named("hstack-shmack"))
             .onChanged({
-                let locationInPocket = CGPoint(x: $0.location.x - scrollOffset.x, y: $0.location.y - scrollOffset.y)
-                print("TADAM: locationInPocket = \(locationInPocket)")
+                let touchLocationInPocket = CGPoint(x: $0.location.x - scrollOffset.x, y: $0.location.y - scrollOffset.y)
+                let viewLocationInPocket = someFrame.offsetBy(dx: -scrollOffset.x, dy: -scrollOffset.y)
+                print("TADAM: touchLocationInPocket = \(touchLocationInPocket), viewLocationInPocket = \(viewLocationInPocket), scrollOffset = \(scrollOffset)")
                 viewModel.drag =
                     SmallViewDragInfo(
                         type: .change,
-                        touchLocationInPocket: locationInPocket,
-                        viewLocationInPocket: .zero,
+                        touchLocationInPocket: touchLocationInPocket,
+                        viewLocationInPocket: viewLocationInPocket,
                         text: view.text)
             })
             .onEnded { _ in
@@ -128,7 +136,7 @@ struct SmallViewDragInfo<SmallContentView: View> {
     
     let type: DragType
     let touchLocationInPocket: CGPoint
-    let viewLocationInPocket: CGPoint
+    let viewLocationInPocket: CGRect
     let text: String
 }
 
