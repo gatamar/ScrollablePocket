@@ -16,18 +16,25 @@ struct ContentView: View {
             ZStack {
                 ScrollablePocket<MySmallView, MyPlaceholder>(
                     viewModel: viewModel,
-                    oneHeight: 40,
+                    rowHeight: 40,
+                    pocketWidth: Constant.pocketWidth,
                     placeholderBuilder: { view in
                         return MyPlaceholder()
                     }
                 )
-                .offset(x: -reader.size.width/2 + 250, y: 0) // -reader.size.height/2
-                    .frame(width: 500, height: 700)
+                .offset(x: -reader.size.width/2 + Constant.pocketWidth/2, y: 0) // -reader.size.height/2
+                .frame(width: Constant.pocketWidth, height: 700)
                     .padding()
+            
+                Rectangle().fill(.blue)
+                    .frame(width: viewModel.drag?.viewRectInPocket.width ?? 0, height: viewModel.drag?.viewRectInPocket.height ?? 0)
+                    .offset(x: -reader.size.width/2 + (viewModel.drag?.touchLocationInPocket.x ?? 0) , y: -350 + (viewModel.drag?.touchLocationInPocket.y ?? 0))
                 
                 //if let drag = viewModel.drag {
-                    MySmallView(str: viewModel.drag?.text ?? "none")
-                        .opacity(viewModel.drag != nil ? 1 : 0)
+                MySmallView(str: viewModel.draggedViewId)
+                    .font(.largeTitle)
+                    .opacity(1)
+                    //.opacity(viewModel.text.isEmpty ? 0 : 1)
                         .offset(x: -reader.size.width/2 + (viewModel.drag?.touchLocationInPocket.x ?? 0) , y: -350 + (viewModel.drag?.touchLocationInPocket.y ?? 0))
                 //}
             }
@@ -48,6 +55,10 @@ private func smallViewsSample() -> [MySmallView] {
 }
 
 private struct MySmallView: View, Identifiable, Hashable, SizePrefferrable {
+    var viewId: String {
+        return str
+    }
+    
     var id = UUID()
     
     @State var str: String
@@ -67,7 +78,7 @@ private struct MySmallView: View, Identifiable, Hashable, SizePrefferrable {
     }
     
 // MARK: SizePrefferrable
-    func preferredSize(oneHeight: CGFloat) -> Int {
+    func preferredSize(rowHeight: CGFloat) -> Int {
         let intVal = Int(str)!
         return intVal % 3 == 0 ? 1 : 2
     }
@@ -82,4 +93,8 @@ private struct MyPlaceholder: View {
         Text("0")
             .background(.blue)
     }
+}
+
+private enum Constant {
+    static let pocketWidth: CGFloat = 500
 }

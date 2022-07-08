@@ -11,7 +11,8 @@ import Combine
 struct ScrollablePocket<SmallContentView: View & Identifiable & Hashable & SizePrefferrable, PlaceholderView: View>: View {
     @ObservedObject var viewModel: ScrollablePocketViewModel<SmallContentView>
     @State private var scrollOffset: CGPoint = .zero
-    private var oneHeight: CGFloat
+    private let rowHeight: CGFloat
+    private let pocketWidth: CGFloat
     private var placeholderBuilder: (SmallContentView) -> PlaceholderView
     
     @State private var smallViewsLayout = [[SmallContentView]]()
@@ -24,12 +25,13 @@ struct ScrollablePocket<SmallContentView: View & Identifiable & Hashable & SizeP
     }
     
     init(viewModel: ScrollablePocketViewModel<SmallContentView>,
-         oneHeight: CGFloat,
+         rowHeight: CGFloat, pocketWidth: CGFloat,
          placeholderBuilder: @escaping (SmallContentView) -> PlaceholderView) {
         self.viewModel = viewModel
-        self.oneHeight = oneHeight
+        self.rowHeight = rowHeight
+        self.pocketWidth = pocketWidth
         self.placeholderBuilder = placeholderBuilder
-        updateSmallViewsLayout(viewModel.smallViews) // TODO: also on change
+        updateSmallViewsLayout(viewModel.smallViews)
     }
     
     var body: some View {
@@ -78,13 +80,13 @@ struct ScrollablePocket<SmallContentView: View & Identifiable & Hashable & SizeP
         var frames = [[CGRect]]()
         var baselineY: CGFloat = 0
         result.append([views[0], views[1]])
-        frames.append([CGRect(x: 0, y: 0, width: 100, height: 30), CGRect(x: 0, y: 0, width: 100, height: 30)])
+        frames.append([CGRect(x: 0, y: 0, width: pocketWidth/2, height: rowHeight), CGRect(x: 0, y: 0, width: pocketWidth/2, height: rowHeight)])
         baselineY += 30
         for idx in 2..<views.count {
-            let curHeight = oneHeight*CGFloat(views[idx].preferredSize(oneHeight: oneHeight))
+            let curHeight = rowHeight*CGFloat(views[idx].preferredSize(rowHeight: rowHeight))
             result.append([views[idx]])
             
-            frames.append([CGRect(x: 0, y: baselineY, width: 0, height: curHeight)])
+            frames.append([CGRect(x: 0, y: baselineY, width: pocketWidth, height: curHeight)])
             baselineY += curHeight
         }
         return (result, frames)
@@ -92,7 +94,7 @@ struct ScrollablePocket<SmallContentView: View & Identifiable & Hashable & SizeP
     
     @ViewBuilder
     private func placeholderForView(_ view: SmallContentView) -> some View {
-        if viewModel.drag?.text == view.text && viewModel.drag?.type == .change {
+        if viewModel.draggedViewId == view.viewId && viewModel.drag?.type == .change {
             placeholderBuilder(view)
         } else {
             EmptyView()
@@ -104,17 +106,18 @@ struct ScrollablePocket<SmallContentView: View & Identifiable & Hashable & SizeP
         return DragGesture(minimumDistance: 0, coordinateSpace: .named("hstack-shmack"))
             .onChanged({
                 let touchLocationInPocket = CGPoint(x: $0.location.x - scrollOffset.x, y: $0.location.y - scrollOffset.y)
-                let viewLocationInPocket = someFrame.offsetBy(dx: -scrollOffset.x, dy: -scrollOffset.y)
-                print("TADAM: touchLocationInPocket = \(touchLocationInPocket), viewLocationInPocket = \(viewLocationInPocket), scrollOffset = \(scrollOffset)")
+                let viewRectInPocket = someFrame.offsetBy(dx: -scrollOffset.x, dy: -scrollOffset.y)
+                print("TADAM: touchLocationInPocket = \(touchLocationInPocket), viewRectInPocket = \(viewRectInPocket), scrollOffset = \(scrollOffset)")
+                viewModel.draggedViewId = view.viewId
                 viewModel.drag =
                     SmallViewDragInfo(
                         type: .change,
                         touchLocationInPocket: touchLocationInPocket,
-                        viewLocationInPocket: viewLocationInPocket,
-                        text: view.text)
+                        viewRectInPocket: viewRectInPocket)
             })
             .onEnded { _ in
                 viewModel.drag = nil
+                viewModel.draggedViewId = ""
 //                    SmallViewDragInfo(
 //                        type: .end,
 //                        touchLocationInPocket: .zero,
@@ -125,8 +128,8 @@ struct ScrollablePocket<SmallContentView: View & Identifiable & Hashable & SizeP
 }
 
 protocol SizePrefferrable {
-    func preferredSize(oneHeight: CGFloat) -> Int
-    var text: String { get }
+    func preferredSize(rowHeight: CGFloat) -> Int
+    var viewId: String { get }
 }
 
 struct SmallViewDragInfo<SmallContentView: View> {
@@ -135,14 +138,18 @@ struct SmallViewDragInfo<SmallContentView: View> {
     }
     
     let type: DragType
+    
+    /// In In the visible part  of the  pocket
     let touchLocationInPocket: CGPoint
-    let viewLocationInPocket: CGRect
-    let text: String
+    
+    /// In the visible part  of the  pocket, not in the entire scroll view
+    let viewRectInPocket: CGRect
 }
 
 class ScrollablePocketViewModel<SmallContentView: View & Hashable & SizePrefferrable>: ObservableObject {
     @Published var smallViews: [SmallContentView]
     @Published var drag: SmallViewDragInfo<SmallContentView>?
+    @Published var draggedViewId: String = ""
     
     init(smallViews: [SmallContentView]) {
         self.smallViews = smallViews
