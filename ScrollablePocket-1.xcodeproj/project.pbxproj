@@ -11,11 +11,11 @@
 		4F259E3F28771D280041742E /* ContentView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4F259E3E28771D280041742E /* ContentView.swift */; };
 		4F259E4128771D2A0041742E /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 4F259E4028771D2A0041742E /* Assets.xcassets */; };
 		4F259E4428771D2A0041742E /* Preview Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 4F259E4328771D2A0041742E /* Preview Assets.xcassets */; };
-		4F36AB4F2880363B00680418 /* scrollable_pocket.h in Headers */ = {isa = PBXBuildFile; fileRef = 4F36AB4E2880363B00680418 /* scrollable_pocket.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		4F36AB522880363B00680418 /* scrollable_pocket.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 4F36AB4C2880363B00680418 /* scrollable_pocket.framework */; };
 		4F36AB532880363B00680418 /* scrollable_pocket.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = 4F36AB4C2880363B00680418 /* scrollable_pocket.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
-		4F36AB582880364F00680418 /* ScrollablePocket.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4F259E4C2877993D0041742E /* ScrollablePocket.swift */; };
-		4F36AB592880365200680418 /* ScrollViewOffsetModifier.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4F259E4A287725F10041742E /* ScrollViewOffsetModifier.swift */; };
+		4F4DEB3F2880771300D402B0 /* ScrollablePocket.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4F4DEB3C2880771300D402B0 /* ScrollablePocket.swift */; };
+		4F4DEB402880771300D402B0 /* ScrollViewOffsetModifier.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4F4DEB3D2880771300D402B0 /* ScrollViewOffsetModifier.swift */; };
+		4F4DEB412880771300D402B0 /* scrollable_pocket.h in Headers */ = {isa = PBXBuildFile; fileRef = 4F4DEB3E2880771300D402B0 /* scrollable_pocket.h */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -48,10 +48,10 @@
 		4F259E3E28771D280041742E /* ContentView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ContentView.swift; sourceTree = "<group>"; };
 		4F259E4028771D2A0041742E /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		4F259E4328771D2A0041742E /* Preview Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = "Preview Assets.xcassets"; sourceTree = "<group>"; };
-		4F259E4A287725F10041742E /* ScrollViewOffsetModifier.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ScrollViewOffsetModifier.swift; sourceTree = "<group>"; };
-		4F259E4C2877993D0041742E /* ScrollablePocket.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ScrollablePocket.swift; sourceTree = "<group>"; };
 		4F36AB4C2880363B00680418 /* scrollable_pocket.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = scrollable_pocket.framework; sourceTree = BUILT_PRODUCTS_DIR; };
-		4F36AB4E2880363B00680418 /* scrollable_pocket.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = scrollable_pocket.h; sourceTree = "<group>"; };
+		4F4DEB3C2880771300D402B0 /* ScrollablePocket.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ScrollablePocket.swift; sourceTree = "<group>"; };
+		4F4DEB3D2880771300D402B0 /* ScrollViewOffsetModifier.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ScrollViewOffsetModifier.swift; sourceTree = "<group>"; };
+		4F4DEB3E2880771300D402B0 /* scrollable_pocket.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = scrollable_pocket.h; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -76,8 +76,8 @@
 		4F259E3028771D280041742E = {
 			isa = PBXGroup;
 			children = (
+				4F4DEB3A2880771300D402B0 /* Sources */,
 				4F259E3B28771D280041742E /* ScrollablePocket-1 */,
-				4F36AB4D2880363B00680418 /* scrollable-pocket */,
 				4F259E3A28771D280041742E /* Products */,
 			);
 			sourceTree = "<group>";
@@ -110,12 +110,20 @@
 			path = "Preview Content";
 			sourceTree = "<group>";
 		};
-		4F36AB4D2880363B00680418 /* scrollable-pocket */ = {
+		4F4DEB3A2880771300D402B0 /* Sources */ = {
 			isa = PBXGroup;
 			children = (
-				4F36AB4E2880363B00680418 /* scrollable_pocket.h */,
-				4F259E4A287725F10041742E /* ScrollViewOffsetModifier.swift */,
-				4F259E4C2877993D0041742E /* ScrollablePocket.swift */,
+				4F4DEB3B2880771300D402B0 /* scrollable-pocket */,
+			);
+			path = Sources;
+			sourceTree = "<group>";
+		};
+		4F4DEB3B2880771300D402B0 /* scrollable-pocket */ = {
+			isa = PBXGroup;
+			children = (
+				4F4DEB3C2880771300D402B0 /* ScrollablePocket.swift */,
+				4F4DEB3D2880771300D402B0 /* ScrollViewOffsetModifier.swift */,
+				4F4DEB3E2880771300D402B0 /* scrollable_pocket.h */,
 			);
 			path = "scrollable-pocket";
 			sourceTree = "<group>";
@@ -127,7 +135,7 @@
 			isa = PBXHeadersBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				4F36AB4F2880363B00680418 /* scrollable_pocket.h in Headers */,
+				4F4DEB412880771300D402B0 /* scrollable_pocket.h in Headers */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -241,8 +249,8 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				4F36AB582880364F00680418 /* ScrollablePocket.swift in Sources */,
-				4F36AB592880365200680418 /* ScrollViewOffsetModifier.swift in Sources */,
+				4F4DEB3F2880771300D402B0 /* ScrollablePocket.swift in Sources */,
+				4F4DEB402880771300D402B0 /* ScrollViewOffsetModifier.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

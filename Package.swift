@@ -12,5 +12,11 @@ let package = Package(
             name: "scrollable_pocket",
             targets: ["scrollable-pocket"]
         )
+    ],
+    targets: [
+        .target(
+            name: "scrollable-pocket"
+        )
     ]
 )
+
