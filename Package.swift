@@ -10,12 +10,13 @@ let package = Package(
     products: [
         .library(
             name: "scrollable_pocket",
-            targets: ["scrollable-pocket"]
+            targets: ["scrollable_pocket"]
         )
     ],
     targets: [
-        .target(
-            name: "scrollable-pocket"
+        .binaryTarget(
+            name: "scrollable_pocket",
+            path: "scrollable_pocket.xcframework"
         )
     ]
 )
