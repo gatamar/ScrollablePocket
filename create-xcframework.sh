@@ -1,4 +1,6 @@
 BUILD_FOLDER="build-xcframework"
+BUILD_VERSION="0.1.0"
+
 mkdir "${BUILD_FOLDER}"
 
 # "archive" for simulator
@@ -21,5 +23,11 @@ xcodebuild -create-xcframework \
 -framework "${BUILD_FOLDER}"/scrollable-pocket-iphonesimulator.xcarchive/Products/Library/Frameworks/scrollable_pocket.framework \
 -output "${BUILD_FOLDER}"/scrollable_pocket.xcframework
 
+# copy a generated framework from build folder to src folder
 cp -R "${BUILD_FOLDER}"/scrollable_pocket.xcframework scrollable_pocket.xcframework
+
+# remove build folder
 rm -rf "${BUILD_FOLDER}"
+
+# compress a generated framework for the Github release
+# zip -r -X "scrollable_pocket.xcframework-${BUILD_VERSION}.zip" "scrollable_pocket.xcframework"
