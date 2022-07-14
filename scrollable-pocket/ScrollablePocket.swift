@@ -8,7 +8,7 @@
 import SwiftUI
 import Combine
 
-struct ScrollablePocket<SmallContentView: View & Identifiable & Hashable & SizePrefferrable, PlaceholderView: View>: View {
+public struct ScrollablePocket<SmallContentView: View & Identifiable & Hashable & SizePrefferrable, PlaceholderView: View>: View {
     @ObservedObject var viewModel: ScrollablePocketViewModel<SmallContentView>
     @State private var scrollOffset: CGPoint = .zero
     private let rowHeight: CGFloat
@@ -24,7 +24,7 @@ struct ScrollablePocket<SmallContentView: View & Identifiable & Hashable & SizeP
         smallViewsFrames = layout.1
     }
     
-    init(viewModel: ScrollablePocketViewModel<SmallContentView>,
+    public init(viewModel: ScrollablePocketViewModel<SmallContentView>,
          rowHeight: CGFloat, pocketWidth: CGFloat,
          placeholderBuilder: @escaping (SmallContentView) -> PlaceholderView) {
         self.viewModel = viewModel
@@ -34,7 +34,7 @@ struct ScrollablePocket<SmallContentView: View & Identifiable & Hashable & SizeP
         updateSmallViewsLayout(viewModel.smallViews)
     }
     
-    var body: some View {
+    public var body: some View {
         GeometryReader { geometry in
             ScrollView(.vertical,  showsIndicators: true) {
                 VStack(spacing: 0) {
@@ -127,33 +127,32 @@ struct ScrollablePocket<SmallContentView: View & Identifiable & Hashable & SizeP
     }
 }
 
-protocol SizePrefferrable {
+public protocol SizePrefferrable {
     func preferredSize(rowHeight: CGFloat) -> Int
     var viewId: String { get }
 }
 
-struct SmallViewDragInfo<SmallContentView: View> {
-    enum DragType {
+public struct SmallViewDragInfo<SmallContentView: View> {
+    public enum DragType {
         case change, end
     }
     
-    let type: DragType
+    public let type: DragType
     
     /// In In the visible part  of the  pocket
-    let touchLocationInPocket: CGPoint
+    public let touchLocationInPocket: CGPoint
     
     /// In the visible part  of the  pocket, not in the entire scroll view
-    let viewRectInPocket: CGRect
+    public let viewRectInPocket: CGRect
 }
 
-class ScrollablePocketViewModel<SmallContentView: View & Hashable & SizePrefferrable>: ObservableObject {
-    @Published var smallViews: [SmallContentView]
-    @Published var drag: SmallViewDragInfo<SmallContentView>?
-    @Published var draggedViewId: String = ""
+public class ScrollablePocketViewModel<SmallContentView: View & Hashable & SizePrefferrable>: ObservableObject {
+    @Published public var smallViews: [SmallContentView]
+    @Published public var drag: SmallViewDragInfo<SmallContentView>?
+    @Published public var draggedViewId: String = ""
     
-    init(smallViews: [SmallContentView]) {
+    public init(smallViews: [SmallContentView]) {
         self.smallViews = smallViews
-        print("TADAM: re-render viewmodel")
     }
 }
 

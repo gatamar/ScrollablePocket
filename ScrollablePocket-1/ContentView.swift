@@ -7,6 +7,7 @@
 
 import SwiftUI
 import Combine
+import scrollable_pocket
 
 struct ContentView: View {
     @ObservedObject private var viewModel = ScrollablePocketViewModel<MySmallView>(smallViews: smallViewsSample())
